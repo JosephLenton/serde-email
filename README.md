@@ -1,6 +1,6 @@
-# emailio
+# Serde Email
 
-A validating email type that can be serialised
+A validating email type that can be serialised using Serde.
 
 ## Introduction
 
