@@ -55,3 +55,11 @@ if is_valid_email(&"test@example.com") {
     // Access parts of the data by indexing with square brackets.
     println!("Hello {} I'll email you are {}", person.name, person.email);
 ```
+
+## Features
+
+ * `serde` - Enables serde serialisation and deserialisation. On by default.
+
+## Special Thanks
+
+The validation is all done by the [email_address crate](https://crates.io/crates/email_address).
