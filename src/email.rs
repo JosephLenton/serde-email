@@ -4,9 +4,14 @@ use ::std::fmt::Debug;
 use ::std::fmt::Display;
 use ::std::fmt::Formatter;
 use ::std::fmt::Result as FmtResult;
+use ::serde::Deserialize;
+use ::serde::Deserializer;
+use ::serde::Serialize;
+use ::serde::Serializer;
 
 use crate::is_valid_email;
 use crate::EmailError;
+use crate::EmailVisitor;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Email {
@@ -22,6 +27,24 @@ impl Email {
 
         Ok(Self { raw_email })
     }
+}
+
+impl Serialize for Email {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+      S: Serializer,
+  {
+      serializer.serialize_str(&self.raw_email)
+  }
+}
+
+impl<'de> Deserialize<'de> for Email {
+  fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+  where
+      D: Deserializer<'de>,
+  {
+      deserializer.deserialize_string(EmailVisitor)
+  }
 }
 
 impl Display for Email {

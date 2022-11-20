@@ -14,7 +14,7 @@ impl Display for EmailError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             EmailError::Invalid { raw_email } => {
-                write!(f, "Invalid email address, was given '{}'", raw_email)
+                write!(f, "invalid email address, was given '{}'", raw_email)
             }
         }
     }
