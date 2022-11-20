@@ -1,6 +1,15 @@
-# Serde Email
+<div align="center">
+  <h1>
+    Serde Email
+  </h1>
 
-A validating email type that can be serialised using Serde.
+  <h2>
+    A validating email type that can be serialised using Serde.
+  </h2>
+
+  [![crate](https://img.shields.io/crates/v/serde-email.svg)](https://crates.io/crates/serde-email)
+  [![docs](https://docs.rs/serde-email/badge.svg)](https://docs.rs/serde-email)
+</div>
 
 ## Introduction
 

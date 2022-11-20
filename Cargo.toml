@@ -1,9 +1,15 @@
 [package]
-name = "emailio"
-version = "0.1.0"
+name = "serde-email"
+version = "1.0.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "A validating email type that can be serialised using Serde"
+keywords = ["email", "email_address", "validation", "serde", "serialization"]
+categories = ["email", "encoding"]
+authors = ["josephlenton@gmail.com <josephlenton@gmail.com>"]
+repository = "https://github.com/JosephLenton/serde-email"
+readme = "README.md"
+documentation = "https://docs.rs/serde-email/latest/serde-email"
 
 [features]
 default = ["serde"]
