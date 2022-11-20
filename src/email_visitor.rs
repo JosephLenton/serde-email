@@ -1,7 +1,7 @@
+use ::serde::de::Error as SerdeDeError;
+use ::serde::de::Visitor;
 use ::std::fmt::Formatter;
 use ::std::fmt::Result as FmtResult;
-use ::serde::de::Visitor;
-use ::serde::de::Error as SerdeDeError;
 
 use crate::Email;
 
@@ -14,13 +14,23 @@ impl<'de> Visitor<'de> for EmailVisitor {
         formatter.write_str("a valid email address")
     }
 
-    fn visit_string<E>(self, raw_email: String) -> Result<Self::Value, E>
-        where
-            E: SerdeDeError
+    fn visit_str<E>(self, raw_email: &str) -> Result<Self::Value, E>
+    where
+        E: SerdeDeError,
     {
-        Email::new(raw_email).map_err(|err| {
-          let msg = format!("{}", err);
-          SerdeDeError::custom(msg)
-        })
+        return Email::new(raw_email.to_string()).map_err(|err| {
+            let msg = format!("{}", err);
+            SerdeDeError::custom(msg)
+        });
+    }
+
+    fn visit_string<E>(self, raw_email: String) -> Result<Self::Value, E>
+    where
+        E: SerdeDeError,
+    {
+        return Email::new(raw_email).map_err(|err| {
+            let msg = format!("{}", err);
+            SerdeDeError::custom(msg)
+        });
     }
 }
