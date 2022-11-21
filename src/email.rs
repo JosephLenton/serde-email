@@ -18,6 +18,11 @@ mod serde_support;
 #[cfg(feature = "serde")]
 pub use self::serde_support::*;
 
+#[cfg(feature = "sea-orm")]
+mod sea_orm_support;
+#[cfg(feature = "sea-orm")]
+pub use self::sea_orm_support::*;
+
 /// This is a wrapper around a String. Which can only be created,
 /// by validating the string is an email.
 ///
