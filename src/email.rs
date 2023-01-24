@@ -81,6 +81,10 @@ impl Email {
     pub fn as_string<'a>(&'a self) -> &'a String {
         &self.raw_email
     }
+
+    pub fn to_string(self) -> String {
+        self.raw_email
+    }
 }
 
 impl Into<String> for Email {

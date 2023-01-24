@@ -3,6 +3,7 @@ use ::sea_orm::entity::IntoActiveValue;
 use ::sea_orm::error::DbErr;
 use ::sea_orm::sea_query::table::ColumnType;
 use ::sea_orm::sea_query::value::ArrayType;
+use ::sea_orm::sea_query::value::Nullable;
 use ::sea_orm::sea_query::value::ValueType;
 use ::sea_orm::sea_query::value::ValueTypeErr;
 use ::sea_orm::QueryResult;
@@ -13,9 +14,15 @@ use ::std::convert::Into;
 
 use crate::Email;
 
-impl Into<Value> for Email {
-    fn into(self) -> Value {
-        Value::String(Some(Box::new(self.raw_email)))
+impl From<Email> for Value {
+    fn from(email: Email) -> Value {
+        Value::String(Some(Box::new(self.to_string())))
+    }
+}
+
+impl Nullable for Email {
+    fn null() -> Value {
+        Value::String(None)
     }
 }
 
@@ -50,51 +57,8 @@ impl ValueType for Email {
     }
 }
 
-// impl IntoValueTuple for Email {
-//     fn into_value_tuple(self) -> ValueTuple {
-//         ValueTuple::One(self.into())
-//     }
-// }
-
 impl IntoActiveValue<Email> for Email {
     fn into_active_value(self) -> ActiveValue<Self> {
         ActiveValue::Set(self)
     }
 }
-
-// impl TryGetable for Email {
-//     fn try_get(res: &QueryResult, pre: &str, col: &str) -> Result<Self, TryGetError> {
-//         let column = format!("{}{}", pre, col);
-//         match &res.row {
-//             #[cfg(feature = "sqlx-mysql")]
-//             QueryResultRow::SqlxMySql(row) => {
-//                 use sqlx::Row;
-//                 row.try_get::<Option<Email>, _>(column.as_str())
-//                     .map_err(|e| TryGetError::DbErr(crate::sqlx_error_to_query_err(e)))
-//                     .and_then(|opt| opt.ok_or(TryGetError::Null(column)))
-//             }
-//             #[cfg(feature = "sqlx-postgres")]
-//             QueryResultRow::SqlxPostgres(row) => {
-//                 use sqlx::Row;
-//                 row.try_get::<Option<Email>, _>(column.as_str())
-//                     .map_err(|e| TryGetError::DbErr(crate::sqlx_error_to_query_err(e)))
-//                     .and_then(|opt| opt.ok_or(TryGetError::Null(column)))
-//             }
-//             #[cfg(feature = "sqlx-sqlite")]
-//             QueryResultRow::SqlxSqlite(row) => {
-//                 use sqlx::Row;
-//                 row.try_get::<Option<Email>, _>(column.as_str())
-//                     .map_err(|e| TryGetError::DbErr(crate::sqlx_error_to_query_err(e)))
-//                     .and_then(|opt| opt.ok_or(TryGetError::Null(column)))
-//             }
-//             #[cfg(feature = "mock")]
-//             #[allow(unused_variables)]
-//             QueryResultRow::Mock(row) => row.try_get(column.as_str()).map_err(|e| {
-//                 debug_print!("{:#?}", e.to_string());
-//                 TryGetError::Null(column)
-//             }),
-//             #[allow(unreachable_patterns)]
-//             _ => unreachable!(),
-//         }
-//     }
-// }
