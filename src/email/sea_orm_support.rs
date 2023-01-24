@@ -10,13 +10,13 @@ use ::sea_orm::QueryResult;
 use ::sea_orm::TryGetError;
 use ::sea_orm::TryGetable;
 use ::sea_orm::Value;
-use ::std::convert::Into;
+use ::std::convert::From;
 
 use crate::Email;
 
 impl From<Email> for Value {
     fn from(email: Email) -> Value {
-        Value::String(Some(Box::new(self.to_string())))
+        Value::String(Some(Box::new(email.to_string())))
     }
 }
 
