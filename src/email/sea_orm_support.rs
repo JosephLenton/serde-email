@@ -28,11 +28,15 @@ impl Nullable for Email {
 
 impl TryGetable for Email {
     fn try_get(res: &QueryResult, pre: &str, col: &str) -> Result<Self, TryGetError> {
-        res.try_get::<String>(pre, col)
-            .and_then(|raw_email| {
-                Email::new(raw_email).map_err(|email_err| DbErr::Custom(email_err.to_string()))
-            })
+        res.try_get::<Option<String>>(pre, col)
             .map_err(|db_err| TryGetError::DbErr(db_err))
+            .and_then(|maybe_raw| match maybe_raw {
+                Some(raw) => Email::new(raw).map_err(|err| {
+                    let db_err = DbErr::Custom(err.to_string());
+                    TryGetError::DbErr(db_err)
+                }),
+                None => Err(TryGetError::Null(col.to_string())),
+            })
     }
 }
 
@@ -60,5 +64,87 @@ impl ValueType for Email {
 impl IntoActiveValue<Email> for Email {
     fn into_active_value(self) -> ActiveValue<Self> {
         ActiveValue::Set(self)
+    }
+}
+
+#[cfg(test)]
+mod test_try_getable {
+    use super::*;
+    use ::sea_orm::entity::prelude::*;
+
+    #[test]
+    fn it_should_compile_with_email() {
+        #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+        #[sea_orm(table_name = "test")]
+        pub struct Model {
+            #[sea_orm(primary_key)]
+            pub id: i32,
+            pub email: Email,
+        }
+
+        #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+        pub enum Relation {}
+
+        impl ActiveModelBehavior for ActiveModel {}
+
+        let email = Email::new("joe@example.com".to_string()).unwrap();
+        let model = Model {
+            id: 123,
+            // Please don't share my private email address.
+            email: email.clone(),
+        };
+
+        // If it reaches this point, it means the above compiled fine.
+        assert_eq!(model.email, email);
+    }
+
+    #[test]
+    fn it_should_compile_with_optional_email_as_none() {
+        #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+        #[sea_orm(table_name = "test")]
+        pub struct Model {
+            #[sea_orm(primary_key)]
+            pub id: i32,
+            pub email: Option<Email>,
+        }
+
+        #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+        pub enum Relation {}
+
+        impl ActiveModelBehavior for ActiveModel {}
+
+        let email = None;
+        let model = Model {
+            id: 123,
+            email: email.clone(),
+        };
+
+        // If it reaches this point, it means the above compiled fine.
+        assert_eq!(model.email, email);
+    }
+
+    #[test]
+    fn it_should_compile_with_optional_some_email() {
+        #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+        #[sea_orm(table_name = "test")]
+        pub struct Model {
+            #[sea_orm(primary_key)]
+            pub id: i32,
+            pub email: Option<Email>,
+        }
+
+        #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+        pub enum Relation {}
+
+        impl ActiveModelBehavior for ActiveModel {}
+
+        let email = Some(Email::new("joe@example.com".to_string()).unwrap());
+        let model = Model {
+            id: 123,
+            email: email.clone(),
+        };
+
+        // If it reaches this point, it means the above compiled fine.
+        assert_eq!(model.email, email);
     }
 }
