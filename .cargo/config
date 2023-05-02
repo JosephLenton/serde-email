@@ -1,2 +1,2 @@
 [alias]
-test-all = "test --features sea-orm,serde"
+test-all = "test --features sea-orm,serde,sqlx"

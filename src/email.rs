@@ -23,6 +23,11 @@ mod sea_orm_support;
 #[cfg(feature = "sea-orm")]
 pub use self::sea_orm_support::*;
 
+#[cfg(feature = "sqlx")]
+mod sqlx_support;
+#[cfg(feature = "sqlx")]
+pub use self::sqlx_support::*;
+
 /// This is a wrapper around a String. Which can only be created,
 /// by validating the string is an email.
 ///
