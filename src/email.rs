@@ -4,6 +4,7 @@ use ::std::fmt::Debug;
 use ::std::fmt::Display;
 use ::std::fmt::Formatter;
 use ::std::fmt::Result as FmtResult;
+use ::std::str::FromStr;
 
 use crate::is_valid_email;
 use crate::EmailError;
@@ -102,6 +103,14 @@ impl AsRef<str> for Email {
 impl AsRef<String> for Email {
     fn as_ref(&self) -> &String {
         self.as_string()
+    }
+}
+
+impl FromStr for Email {
+    type Err = EmailError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Email::new(s.to_string())
     }
 }
 
