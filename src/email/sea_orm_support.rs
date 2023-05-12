@@ -6,6 +6,7 @@ use ::sea_orm::sea_query::value::ArrayType;
 use ::sea_orm::sea_query::value::Nullable;
 use ::sea_orm::sea_query::value::ValueType;
 use ::sea_orm::sea_query::value::ValueTypeErr;
+use ::sea_orm::ColIdx;
 use ::sea_orm::QueryResult;
 use ::sea_orm::TryGetError;
 use ::sea_orm::TryGetable;
@@ -27,6 +28,21 @@ impl Nullable for Email {
 }
 
 impl TryGetable for Email {
+    fn try_get_by<I>(res: &QueryResult, index: I) -> Result<Self, TryGetError>
+    where
+        I: ColIdx,
+    {
+        res.try_get_by::<Option<String>, I>(index)
+            .map_err(|db_err| TryGetError::DbErr(db_err))
+            .and_then(|maybe_raw| match maybe_raw {
+                Some(raw) => Email::new(raw).map_err(|err| {
+                    let db_err = DbErr::Custom(err.to_string());
+                    TryGetError::DbErr(db_err)
+                }),
+                None => Err(TryGetError::Null(format!("{index:?}"))),
+            })
+    }
+
     fn try_get(res: &QueryResult, pre: &str, col: &str) -> Result<Self, TryGetError> {
         res.try_get::<Option<String>>(pre, col)
             .map_err(|db_err| TryGetError::DbErr(db_err))

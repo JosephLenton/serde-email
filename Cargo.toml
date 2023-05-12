@@ -1,6 +1,6 @@
 [package]
 name = "serde-email"
-version = "1.4.0"
+version = "1.4.1"
 edition = "2021"
 license = "MIT"
 description = "A validating email type that can be serialised using Serde"
@@ -18,7 +18,7 @@ sea-orm = ["dep:sea-orm"]
 
 [dependencies]
 email_address = "0.2.4"
-sea-orm = { version = "0.10.7", optional = true }
+sea-orm = { version = "0.11.3", optional = true }
 serde = { version = "1.0.163", optional = true }
 
 [dev-dependencies]
