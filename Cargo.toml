@@ -1,6 +1,6 @@
 [package]
 name = "serde-email"
-version = "1.4.1"
+version = "1.5.0"
 edition = "2021"
 license = "MIT"
 description = "A validating email type that can be serialised using Serde"
