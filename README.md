@@ -48,26 +48,26 @@ if is_valid_email(&"test@example.com") {
 ### Serialisation / Deserialisation
 
 ```rust
-    use ::emailio::Email;
-    use ::serde_json;
+use ::emailio::Email;
+use ::serde_json;
 
-    struct Person {
-      name: String,
-      email: Email,
-    }
+struct Person {
+  name: String,
+  email: Email,
+}
 
-    // Some JSON input data as a &str. Maybe this comes from the user.
-    let data = r#"
-        {
-            "name": "John Doe",
-            "email": "john@example.com"
-        }"#;
+// Some JSON input data as a &str. Maybe this comes from the user.
+let data = r#"
+    {
+        "name": "John Doe",
+        "email": "john@example.com"
+    }"#;
 
-    // Parse the string of data into serde_json::Value.
-    let person: Person = serde_json::from_str(data).unwrap();
+// Parse the string of data into serde_json::Value.
+let person: Person = serde_json::from_str(data).unwrap();
 
-    // Access parts of the data by indexing with square brackets.
-    println!("Hello {} I'll email you are {}", person.name, person.email);
+// Access parts of the data by indexing with square brackets.
+println!("Hello {} I'll email you are {}", person.name, person.email);
 ```
 
 ### Sea Orm Entities
