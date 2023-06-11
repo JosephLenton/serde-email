@@ -18,7 +18,7 @@ impl<'de> Visitor<'de> for EmailVisitor {
     where
         E: SerdeDeError,
     {
-        return Email::new(raw_email.to_string()).map_err(|err| {
+        return Email::from_str(raw_email).map_err(|err| {
             let msg = format!("{}", err);
             SerdeDeError::custom(msg)
         });
@@ -28,7 +28,7 @@ impl<'de> Visitor<'de> for EmailVisitor {
     where
         E: SerdeDeError,
     {
-        return Email::new(raw_email).map_err(|err| {
+        return Email::from_string(raw_email).map_err(|err| {
             let msg = format!("{}", err);
             SerdeDeError::custom(msg)
         });

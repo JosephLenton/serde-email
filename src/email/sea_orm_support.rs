@@ -35,7 +35,7 @@ impl TryGetable for Email {
         res.try_get_by::<Option<String>, I>(index)
             .map_err(|db_err| TryGetError::DbErr(db_err))
             .and_then(|maybe_raw| match maybe_raw {
-                Some(raw) => Email::new(raw).map_err(|err| {
+                Some(raw) => Email::from_string(raw).map_err(|err| {
                     let db_err = DbErr::Custom(err.to_string());
                     TryGetError::DbErr(db_err)
                 }),
@@ -47,7 +47,7 @@ impl TryGetable for Email {
         res.try_get::<Option<String>>(pre, col)
             .map_err(|db_err| TryGetError::DbErr(db_err))
             .and_then(|maybe_raw| match maybe_raw {
-                Some(raw) => Email::new(raw).map_err(|err| {
+                Some(raw) => Email::from_string(raw).map_err(|err| {
                     let db_err = DbErr::Custom(err.to_string());
                     TryGetError::DbErr(db_err)
                 }),
@@ -59,7 +59,9 @@ impl TryGetable for Email {
 impl ValueType for Email {
     fn try_from(value: Value) -> Result<Self, ValueTypeErr> {
         match value {
-            Value::String(Some(raw_email)) => Email::new(*raw_email).map_err(|_| ValueTypeErr),
+            Value::String(Some(raw_email)) => {
+                Email::from_string(*raw_email).map_err(|_| ValueTypeErr)
+            }
             _ => Err(ValueTypeErr),
         }
     }
@@ -103,7 +105,7 @@ mod test_try_getable {
 
         impl ActiveModelBehavior for ActiveModel {}
 
-        let email = Email::new("joe@example.com".to_string()).unwrap();
+        let email = Email::default();
         let model = Model {
             id: 123,
             // Please don't share my private email address.
@@ -154,7 +156,7 @@ mod test_try_getable {
 
         impl ActiveModelBehavior for ActiveModel {}
 
-        let email = Some(Email::new("joe@example.com".to_string()).unwrap());
+        let email = Some(Email::default());
         let model = Model {
             id: 123,
             email: email.clone(),

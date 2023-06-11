@@ -39,7 +39,7 @@ mod test_serialisation {
 
     #[test]
     fn it_should_serialise_email_from_string() {
-        let email = Email::new("john@example.com".to_string()).unwrap();
+        let email = Email::from_str("john@example.com").unwrap();
         let raw = serde_json::to_string(&email).unwrap();
 
         assert_eq!(raw, r#""john@example.com""#);
@@ -87,7 +87,7 @@ mod test_deserialisation {
 
         let email: Email = serde_json::from_str(raw_json_email).unwrap();
 
-        assert_eq!(email, Email::new("john@example.com".to_string()).unwrap());
+        assert_eq!(email, Email::from_str("john@example.com").unwrap());
     }
 
     #[test]
@@ -100,9 +100,6 @@ mod test_deserialisation {
 
         let person = serde_json::from_str::<Person>(data).unwrap();
 
-        assert_eq!(
-            person.email,
-            Email::new("john@example.com".to_string()).unwrap()
-        );
+        assert_eq!(person.email, Email::from_str("john@example.com").unwrap());
     }
 }
