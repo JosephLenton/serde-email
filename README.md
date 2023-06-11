@@ -18,7 +18,9 @@ This crate is for creating `Email` objects.
  * It allows you to have Email **as a type**. i.e. `let emails : Vec<Email> = vec![]`.
  * The `Email` type guarantees to be **validated**. Once it is created, you can be confident it's safe to use as an email.
  * The `Email` type can also be **used as strings**. This allows interoptability with lots of connector functions which will take a String.
- * It **supports Serde**. Serialisation with CLIs, requests, etc. Should all work thanks to this.
+ * It **supports Serde** out of the box. For Serialisation with CLIs, requests, etc.
+
+(Note this library will not check if the Email address exists. It only validates that it looks correct.)
 
 ## Features
 
@@ -30,15 +32,15 @@ This crate is for creating `Email` objects.
 ### Building your own email addresses
 
 ```rust
-use ::emailio::Email;
+use ::serde_email::Email;
 
-let email = Email::new("test@example.com".to_string()).expect("A valid email address");
+let email = Email::from_str("test@example.com").expect("A valid email address");
 ```
 
 ### Validating the email address yourself
 
 ```rust
-use ::emailio::is_valid_email;
+use ::serde_email::is_valid_email;
 
 if is_valid_email(&"test@example.com") {
   // do something
@@ -48,7 +50,7 @@ if is_valid_email(&"test@example.com") {
 ### Serialisation / Deserialisation
 
 ```rust
-use ::emailio::Email;
+use ::serde_email::Email;
 use ::serde_json;
 
 struct Person {
@@ -87,8 +89,12 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub email: Email, // use as an email field
-    pub created: OffsetDateTime,
 }
+
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {}
+
+impl ActiveModelBehavior for ActiveModel {}
 ```
 
 ## Special Thanks
