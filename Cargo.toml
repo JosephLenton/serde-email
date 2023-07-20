@@ -13,6 +13,7 @@ documentation = "https://docs.rs/serde-email/latest/serde-email"
 
 [features]
 default = ["serde"]
+all = ["default", "serde", "sea-orm"]
 serde = ["dep:serde"]
 sea-orm = ["dep:sea-orm"]
 

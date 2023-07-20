@@ -66,6 +66,8 @@
 //! You can use the `Email` type with Sea Orm, including using it to save data to the DB.
 //! Underneath it will serialise to a `Text` type within the DB.
 //!
+//! **Required**, the `sea-orm` feature must be enabled for Sea Orm support.
+//!
 //! ```rust
 //! use ::sea_orm::entity::prelude::*;
 //! use ::serde::Deserialize;
