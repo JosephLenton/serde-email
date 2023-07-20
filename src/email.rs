@@ -74,7 +74,7 @@ impl Email {
     /// Returns a new Email, where the internal email has been uppercased.
     pub fn to_uppercase(&self) -> Self {
         Self {
-            raw_email: self.raw_email.to_lowercase(),
+            raw_email: self.raw_email.to_uppercase(),
         }
     }
 
@@ -286,5 +286,76 @@ mod test_default {
         let email = Email::default();
 
         assert!(is_valid_email(&email));
+    }
+}
+
+#[cfg(test)]
+mod test_to_lowercase {
+    use super::*;
+
+    #[test]
+    fn it_should_make_it_lowercase() {
+        let email: Email = "JoE@eXaMpLe.com".parse().unwrap();
+
+        assert_eq!(
+            email.to_lowercase(),
+            Email::from_str("joe@example.com").unwrap()
+        );
+    }
+
+    #[test]
+    fn it_should_not_change_already_lowercase() {
+        let email: Email = "joe@example.com".parse().unwrap();
+
+        assert_eq!(
+            email.to_lowercase(),
+            Email::from_str("joe@example.com").unwrap()
+        );
+    }
+}
+
+#[cfg(test)]
+mod test_to_uppercase {
+    use super::*;
+
+    #[test]
+    fn it_should_make_it_uppercase() {
+        let email: Email = "JoE@eXaMpLe.com".parse().unwrap();
+
+        assert_eq!(
+            email.to_uppercase(),
+            Email::from_str("JOE@EXAMPLE.COM").unwrap()
+        );
+    }
+
+    #[test]
+    fn it_should_not_change_already_uppercase() {
+        let email: Email = "joe@example.com".parse().unwrap();
+
+        assert_eq!(
+            email.to_uppercase(),
+            Email::from_str("JOE@EXAMPLE.COM").unwrap()
+        );
+    }
+}
+
+#[cfg(test)]
+mod test_partial_eq {
+    use super::*;
+
+    #[test]
+    fn it_should_be_equal_to_strs() {
+        let email: Email = "joe@example.com".parse().unwrap();
+        let is_equal = email == "joe@example.com";
+
+        assert!(is_equal);
+    }
+
+    #[test]
+    fn it_should_not_be_equal_to_different_strs() {
+        let email: Email = "joe@example.com".parse().unwrap();
+        let is_not_equal = email != "🦊@example.com";
+
+        assert!(is_not_equal);
     }
 }
