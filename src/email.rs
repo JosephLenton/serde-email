@@ -16,13 +16,9 @@ pub(crate) use self::email_visitor::*;
 
 #[cfg(feature = "serde")]
 mod serde_support;
-#[cfg(feature = "serde")]
-pub use self::serde_support::*;
 
 #[cfg(feature = "sea-orm")]
 mod sea_orm_support;
-#[cfg(feature = "sea-orm")]
-pub use self::sea_orm_support::*;
 
 /// A validated Email object.
 ///
